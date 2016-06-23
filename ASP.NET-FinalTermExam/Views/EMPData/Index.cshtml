@@ -79,6 +79,7 @@
                 @foreach (var item in (List<ASP.NET_FinalTermExam.Models.EMP>)ViewBag.SearchResult)
                     {
                     <tr id='@item.Id'>
+                        <td>@item.Id</td>
                         <td>@item.Name</td>
                         <td>@item.Title</td>
                         <td>@item.Hiredate</td>
