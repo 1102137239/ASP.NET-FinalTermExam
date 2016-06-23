@@ -1,0 +1,119 @@
+﻿@model ASP.NET_FinalTermExam.Models.EMPSearchArg
+@{
+    ViewBag.Title = "Index";
+}
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h2>員工查詢</h2>
+@using (Html.BeginForm("Index", "EMPData", FormMethod.Post, new { id = "Form1" }))
+{
+    <div id="SearchConditionSection">
+        <table class="table table-bordered">
+            <tr>
+                <td>國家</td>
+                <td>
+                    @Html.DropDownListFor(model => model.Country, (List<SelectListItem>)ViewBag.Country)
+                </td>
+            </tr>
+            <tr>
+                <td>縣市</td>
+                <td>
+                    @Html.DropDownListFor(model => model.City, (List<SelectListItem>)ViewBag.City)
+                </td>
+            </tr>
+            <tr>
+                <td>員工編號</td>
+                <td>
+                    @Html.TextBoxFor(model => model.EMPId)
+                </td>
+            </tr>
+            <tr>
+                <td>員工名稱</td>
+                <td>
+                    @Html.TextBoxFor(model => model.EMPName)
+                </td>
+            </tr>
+            <tr>
+                <td>性別</td>
+                <td>
+                    @Html.DropDownListFor(model => model.Gender, (List<SelectListItem>)ViewBag.Gender)
+                </td>
+            </tr>
+            <tr>
+                <td>職稱</td>
+                <td>
+                    @Html.DropDownListFor(model => model.Title, (List<SelectListItem>)ViewBag.Tit)
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <input type="submit" value="查詢" />
+                    <input type="button" value="清除" />
+                    @Html.ActionLink("新增員工", "InsertOrder")
+                </td>
+
+            </tr>
+        </table>
+    </div>
+
+    <div id="SearchResultSection">
+
+
+        @if (ViewBag.SearchResult != null)
+        {
+            <table class="table table-bordered table-striped">
+                <tr>
+                    <td>編號</td>
+                    <td>姓名</td>
+                    <td>職稱</td>
+                    <td>任職日期</td>
+                    <td>性別</td>
+                    <td>年齡</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                @foreach (var item in (List<ASP.NET_FinalTermExam.Models.EMP>)ViewBag.SearchResult)
+                    {
+                    <tr id='@item.Id'>
+                        <td>@item.Name</td>
+                        <td>@item.Title</td>
+                        <td>@item.Hiredate</td>
+                        <td>@item.Genter</td>
+                        <td>@item.Age</td>
+                        <td>@Html.ActionLink("修改", "UpdateOrder", new { id = item.Id })</td>
+                        <td>
+                            <a class="btnDelete" href="#">刪除</a>
+                            <input class="hidEMPId" type="hidden" value='@item.Id' />
+                        </td>
+                    </tr>
+                }
+            </table>
+        }
+
+
+    </div>
+}
+
+<script type="text/javascript">
+
+
+    $(".btnDelete").click(function (e) {
+        var tr = $(this).closest('tr')
+        $.ajax({
+            type: "POST",
+            url: "/EMPData/DeleteEMP",
+            data: "EMPId="+$(this).next().val(),
+            dataType: "json",
+            success: function (response) {
+                $(tr).remove();
+            }
+        });
+        return false;
+    });
+
+</script>
+
