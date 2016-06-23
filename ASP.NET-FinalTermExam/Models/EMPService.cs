@@ -29,7 +29,7 @@ namespace ASP.NET_FinalTermExam.Models
             DataTable dt = new DataTable();
             string sql = @"select HE.[EmployeeID] as 編號,HE.[FirstName]+HE.[LastName] as 姓名,DCT.CodeVal as 職稱,HE.[HireDate] as 任職日期,DCG.CodeVal as 性別,datediff(year,[BirthDate],getdate()) as 年齡
                             from [HR].[Employees] HE join [dbo].[CodeTable] DCT on DCT.[CodeId]=HE.[Title] and DCT.CodeType='TITLE' join [dbo].[CodeTable] DCG on DCG.[CodeId]=HE.[Gender] and DCG.CodeType='GENDER' join [dbo].[CodeTable] DCCI on DCCI.[CodeId]=HE.[City] and DCCI.CodeType='CITY'join [dbo].[CodeTable] DCCO on DCCO.[CodeId]=HE.[Country] and DCCO.CodeType='COUNTRY'
-					Where DCCI.[CodeId] = @CITY AND DCCO.[CodeId] = @COUNTRY";
+					Where DCCI.[CodeId] = @CITY AND DCCO.[CodeId] = @COUNTRY AND DCG.[CodeId] = @GENDER";
 
 
             using (SqlConnection conn = new SqlConnection(this.GetDBConnectionString()))
@@ -38,7 +38,8 @@ namespace ASP.NET_FinalTermExam.Models
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.Add(new SqlParameter("@CITY", arg.City == -1 ? -1 : arg.City));
                 cmd.Parameters.Add(new SqlParameter("@COUNTRY", arg.Country== null ? string.Empty : arg.Country));
-               // cmd.Parameters.Add(new SqlParameter("@EmpId", arg.EmpId == -1 ? -1 : arg.EmpId));
+                cmd.Parameters.Add(new SqlParameter("@GENDER", arg.Gender == null ? string.Empty : arg.Gender));
+                // cmd.Parameters.Add(new SqlParameter("@EmpId", arg.EmpId == -1 ? -1 : arg.EmpId));
                 SqlDataAdapter sqlAdapter = new SqlDataAdapter(cmd);
                 sqlAdapter.Fill(dt);
                 conn.Close();
